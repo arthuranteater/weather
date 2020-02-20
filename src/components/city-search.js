@@ -3,8 +3,12 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
 
-export const Search = ({ passCoords }) => {
+export const Search = ({ passCoords, current }) => {
     const [city, setCity] = React.useState({})
+
+    const passCoordsUp = React.useCallback(c => {
+        return passCoords(c)
+        }, [passCoords])
 
     React.useEffect(() => {
         console.log('change in city search')
@@ -21,11 +25,10 @@ export const Search = ({ passCoords }) => {
                     const lon = json.results[0].geometry.location.lng
                     console.log('lat', lat)
                     console.log('lon', lon)
-                    passCoords([lat, lon])
+                    passCoordsUp([lat, lon])
                 })
         }
-    }, [city])
-
+    }, [city, passCoordsUp])
 
 
     return (
@@ -33,10 +36,11 @@ export const Search = ({ passCoords }) => {
             e.preventDefault()
             setCity(e.target[0].value)
         }} className='mt-5' style={{ width: '18rem', margin: 'auto' }}>
+        <Form.Label>City</Form.Label>
             <Form.Group controlId="formText">
-                <Form.Control type="text" placeholder="Enter City" />
+                <Form.Control type="text" placeholder={current.name ? current.name : 'Enter City'} />
             </Form.Group>
-            <Button variant="primary" type="submit">Submit</Button>
+            <Button variant="primary" type="submit">Search</Button>
         </Form>
     )
 }

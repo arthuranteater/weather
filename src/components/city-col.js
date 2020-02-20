@@ -7,11 +7,17 @@ import Button from 'react-bootstrap/Button'
 
 
 export const CityCol = ({ col, del }) => {
-    console.log('rendering city col')
+    console.log('rendering city col', col)
+
+    //col state
     const [coords, setCoords] = React.useState([])
     const [weather, setWeather] = React.useState({})
     const [scale, setScale] = React.useState('metric')
-    const [forecast, setForecast] = React.useState()
+    const [forecast, setForecast] = React.useState({})
+
+    //passing state
+    const passCoords = React.useCallback(c => {setCoords(c)}, [])
+
 
     React.useEffect(() => {
         console.log('column', col)
@@ -25,9 +31,9 @@ export const CityCol = ({ col, del }) => {
     })
 
     React.useEffect(() => {
-        console.log('coords changed')
+        console.log('coords changed, fetching weather')
         if (coords.length !== 0) {
-            const api = `http://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER}`
+            const api = `http://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`
             console.log('api', api)
             fetch(api)
                 .then(res => {
@@ -38,31 +44,31 @@ export const CityCol = ({ col, del }) => {
                 })
         }
 
-    }, [coords])
+    }, [coords, scale])
 
     React.useEffect(() => {
         console.log('weatherdata', weather)
     }, [weather])
 
     React.useEffect(() => {
-        console.log('coords changed')
+        console.log('coords changed, fetching forecast')
         if (coords.length !== 0) {
-            const api = `http://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER}`
+            const api = `http://api.openweathermap.org/data/2.5/forecast?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`
             console.log('api', api)
             fetch(api)
                 .then(res => {
                     return res.json()
                 })
                 .then((json) => {
-                    setWeather(json)
+                    setForecast(json)
                 })
         }
 
-    }, [coords])
+    }, [coords, scale])
 
     React.useEffect(() => {
-        console.log('weatherdata', weather)
-    }, [weather])
+        console.log('forecast', forecast)
+    },  [forecast])
 
     return (
         <Col id={col} className='mt-5' >
@@ -73,8 +79,10 @@ export const CityCol = ({ col, del }) => {
                 }
             </div>
             <Radio passScale={(s) => setScale(s)} />
-            <Search passCoords={(c) => setCoords(c)} />
-            <WeatherCard current= />
+            <Search passCoords={passCoords} current={weather} />
+            {weather !== {} ?
+            <WeatherCard scale={scale} current={weather} forecast={forecast} />
+            : <div></div>}
         </Col>
 
     )
