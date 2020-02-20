@@ -50,7 +50,7 @@ export const WeatherCard = ({ scale, current, forecast }) => {
                 <Card className='mt-5' style={{ width: '18rem', margin: 'auto' }}>
                     <Card.Body>
                         <Card.Header>{current.name}</Card.Header>
-                        <Card.Title className='mt-2'>Current Weather</Card.Title>
+                        <Card.Title className='mt-2'>{day}</Card.Title>
                         <img src={`http://openweathermap.org/img/wn/${current.weather[0].icon}.png`} alt={`${current.weather}`} />
                         <p style={{ textAlign: 'center', fontSize: '1.2em', listStyle: 'none' }}>{current.main.temp} ° {units}</p>
                         <Button variant="primary" onClick={e => {
