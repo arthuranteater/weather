@@ -43,7 +43,7 @@ export const Search = ({ passCoords, current }) => {
             <Form.Group as={Row} controlId="formText">
                 <Form.Label column sm="2">City:</Form.Label>
                 <Col sm="8">
-                    <Form.Control type="text" placeholder={current.name ? current.name : 'Enter City'} />
+                    <Form.Control className='float-left' type="text" placeholder={current.name ? current.name : 'Enter City'} />
                 </Col>
                 <Col sm="2">
                     <Button variant="primary" type="submit">Search</Button>

@@ -6,13 +6,12 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 
 
-export const CityCol = ({ col, del }) => {
+export const CityCol = ({ col, del, scale }) => {
     console.log('rendering city col', col)
 
     //col state
     const [coords, setCoords] = React.useState([])
     const [weather, setWeather] = React.useState({})
-    const [scale, setScale] = React.useState('metric')
     const [forecast, setForecast] = React.useState({})
 
     //passing state
@@ -72,13 +71,11 @@ export const CityCol = ({ col, del }) => {
 
     return (
         <Col id={col} className='mt-5' >
-            <h1>{col}</h1>
             <div>
                 {col !== 1 ? <Button className='btn-danger' onClick={() => del(col)}>Delete</Button> :
                     <Button style={{ visibility: 'hidden' }}>Boo</Button>
                 }
             </div>
-            <Radio passScale={(s) => setScale(s)} />
             <Search passCoords={passCoords} current={weather} />
             {weather !== {} ?
                 <WeatherCard scale={scale} current={weather} forecast={forecast} />
