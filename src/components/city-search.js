@@ -1,6 +1,8 @@
 import React from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 
 export const Search = ({ passCoords, current }) => {
@@ -8,7 +10,7 @@ export const Search = ({ passCoords, current }) => {
 
     const passCoordsUp = React.useCallback(c => {
         return passCoords(c)
-        }, [passCoords])
+    }, [passCoords])
 
     React.useEffect(() => {
         console.log('change in city search')
@@ -36,11 +38,18 @@ export const Search = ({ passCoords, current }) => {
             e.preventDefault()
             setCity(e.target[0].value)
         }} className='mt-5' style={{ width: '18rem', margin: 'auto' }}>
-        <Form.Label>City</Form.Label>
-            <Form.Group controlId="formText">
-                <Form.Control type="text" placeholder={current.name ? current.name : 'Enter City'} />
+
+
+            <Form.Group as={Row} controlId="formText">
+                <Form.Label column sm="2">City:</Form.Label>
+                <Col sm="8">
+                    <Form.Control type="text" placeholder={current.name ? current.name : 'Enter City'} />
+                </Col>
+                <Col sm="2">
+                    <Button variant="primary" type="submit">Search</Button>
+                </Col>
             </Form.Group>
-            <Button variant="primary" type="submit">Search</Button>
+
         </Form>
     )
 }

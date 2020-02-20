@@ -12,13 +12,19 @@ export const Layout = (props) => {
     const helper = (del) => setCount(count.filter(col => col !== del))
 
     return (
-        <Container>
-            <Row className='mt-5'>
-                {count.length > 2 ?
-                    <div></div> :
-                    <Col>
-                        <Button onClick={() => setCount(count.concat(count[count.length - 1] + 1))} > Add City</Button>
-                    </Col>}
+        <Container fluid={true}>
+            <Row className='mt-2' style={{ postion: 'sticky', top: 0 }}>
+                <Col style={{ margin: 'auto' }} sm='4'>
+                </Col>
+                <Col style={{ margin: 'auto' }} sm='4'>
+                    <a href="/"><h3>Whats the Weather In</h3></a>
+                </Col>
+                <Col sm='4'>
+                    {count.length > 2 ?
+                        <div></div> :
+                        <Button className='float-right' onClick={() => setCount(count.concat(count[count.length - 1] + 1))}>+ Add City</Button>
+                    }
+                </Col>
             </Row>
             <Row>
                 {count.map(col =>

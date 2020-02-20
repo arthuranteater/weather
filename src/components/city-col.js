@@ -16,7 +16,7 @@ export const CityCol = ({ col, del }) => {
     const [forecast, setForecast] = React.useState({})
 
     //passing state
-    const passCoords = React.useCallback(c => {setCoords(c)}, [])
+    const passCoords = React.useCallback(c => { setCoords(c) }, [])
 
 
     React.useEffect(() => {
@@ -68,11 +68,11 @@ export const CityCol = ({ col, del }) => {
 
     React.useEffect(() => {
         console.log('forecast', forecast)
-    },  [forecast])
+    }, [forecast])
 
     return (
         <Col id={col} className='mt-5' >
-            {console.log('rendering city col')}
+            <h1>{col}</h1>
             <div>
                 {col !== 1 ? <Button className='btn-danger' onClick={() => del(col)}>Delete</Button> :
                     <Button style={{ visibility: 'hidden' }}>Boo</Button>
@@ -81,8 +81,8 @@ export const CityCol = ({ col, del }) => {
             <Radio passScale={(s) => setScale(s)} />
             <Search passCoords={passCoords} current={weather} />
             {weather !== {} ?
-            <WeatherCard scale={scale} current={weather} forecast={forecast} />
-            : <div></div>}
+                <WeatherCard scale={scale} current={weather} forecast={forecast} />
+                : <div></div>}
         </Col>
 
     )
