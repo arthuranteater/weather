@@ -65,8 +65,11 @@ export const CityCol = ({ col, del, scale }) => {
         })
         .then((obj) => {
           console.log("rev gecoding", obj);
-          console.log('add', obj.plus_code.compound_code.split(" ").shift().join().split(',').join('+'))
-          setCityName(obj.plus_code.compound_code.split(" ").shift().join().split(',').join('+');
+          const arr = obj.plus_code.compound_code.split(" ")
+          arr.shift()
+          console.log('arr to join', arr)
+          console.log('add', arr.join().split(",").filter(x=> x !== ',').join(' ').split('  ').join('+'))
+          setCityName(arr.join().split(",").filter(x=> x !== ',').join(' ').split('  ').join('+'));
         });
     }
   }, [coords]);
@@ -108,7 +111,7 @@ export const CityCol = ({ col, del, scale }) => {
 
   return (
     <>
-    {if (bg !== {} ? 
+    {bg !== {} ? 
     <Col id={col} className="mt-5" style={{backgroundImage: `url(${bg})`}}>
       <div>
         {col !== 1 ? (
