@@ -12,11 +12,12 @@ export const WeatherCard = ({ scale, current, forecast }) => {
 
     if (forecast.list !== undefined) {
         forecast.list.map(period => {
-            const day = period.dt_txt.split(' ')[0].split('-')[2]
+            let day = period.dt_txt.split(' ')[0].split('-')[2]
             const month = parseInt(period.dt_txt.split(' ')[0].split('-')[1])
             let time = parseInt(period.dt_txt.split(' ')[1].split(':')[0]) + hrs
             if (time < 0) {
                 time = time + 24
+                day = day - 1
             }
             const temp = period.main.temp
             const icon = period.weather[0].icon
@@ -62,12 +63,12 @@ export const WeatherCard = ({ scale, current, forecast }) => {
                     </div>
                 </Card.Body>
             </Card> : <div></div>}
-            {five ? Object.entries(highLow).map(day =>
+            {five ? Object.entries(highLow).map((day, i) =>
                 <Card key={day[0]} className='mt-5' style={{ width: '18rem', margin: 'auto' }}>
-                    {console.log('day', day)}
+                    {console.log('day', day, 'i', i)}
                     <Card.Body>
                         <Card.Title className='mt-2'>{current.name} | {day[1].month} {day[0]}</Card.Title>
-                        <p style={{ fontWeight: 'bold', textAlign: 'center', fontSize: '1.2em' }}>{Math.min.apply(Math, day[1].temps)}  ,  {Math.max.apply(Math, day[1].temps)} ° {units}</p>
+                        <p style={{ fontWeight: 'bold', textAlign: 'center', fontSize: '1.2em' }}>{Math.min.apply(Math, day[1].temps)} - {Math.max.apply(Math, day[1].temps)} ° {units}</p>
 
                         {hourly ? Object.entries(day[1].icons).map((icon, i) =>
                             <p key={i}>
