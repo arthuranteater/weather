@@ -12,12 +12,11 @@ export const CityCol = ({ col, del, scale }) => {
   const [coords, setCoords] = React.useState([]);
   const [weather, setWeather] = React.useState({});
   const [forecast, setForecast] = React.useState({});
-  const [cityname, setCityName] = React.useState({});
-  const [bg, setBG] = React.useState({});
+  const [cityname, setCityName] = React.useState(null);
+  const [bg, setBG] = React.useState([]);
 
   //return random
-  const getRandom = (min, max) => Math.floor(Math.random() * (max - min)) + min
-
+  const getRandom = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
   //passing state
   const passCoords = React.useCallback((c) => {
@@ -64,12 +63,31 @@ export const CityCol = ({ col, del, scale }) => {
           return res.json();
         })
         .then((obj) => {
-          console.log("rev gecoding", obj);
-          const arr = obj.plus_code.compound_code.split(" ")
-          arr.shift()
-          console.log('arr to join', arr)
-          console.log('add', arr.join().split(",").filter(x=> x !== ',').join(' ').split('  ').join('+'))
-          setCityName(arr.join().split(",").filter(x=> x !== ',').join(' ').split('  ').join('+'));
+          console.log("rev gecoding .results", obj.results);
+          const arr = obj.plus_code.compound_code.split(" ");
+          arr.shift();
+          // console.log("arr to join", arr);
+          // console.log(
+          //   "add",
+          //   arr
+          //     .join()
+          //     .split(",")
+          //     .filter((x) => x !== ",")
+          //     .join(" ")
+          //     .split("  ")
+          //     .join("+")
+          // );
+          // setCityName(
+          //   arr
+          //     .join()
+          //     .split(",")
+          //     .filter((x) => x !== ",")
+          //     .join(" ")
+          //     .split("  ")
+          //     .join("+")
+          // );
+          console.log(obj.results[0].address_components[5].long_name);
+          setCityName(obj.results[0].address_components[5].long_name);
         });
     }
   }, [coords]);
@@ -77,17 +95,25 @@ export const CityCol = ({ col, del, scale }) => {
   React.useEffect(() => {
     console.log("weather fetched, fetching bg img");
     console.log("weatherdata", weather);
-    const api = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${cityname}&image_type=photo&safesearch=true`;
-    console.log("bg img api", api);
-    fetch(api)
-      .then((res) => {
-        return res.json();
-      })
-      .then((obj) => {
-        console.log(obj.data);
-        const i = getRandom(obj.data.hits.length)
-        setBG(obj.data.hits[i].largeImageURL)
-      });
+    console.log("cityname", cityname);
+    if (cityname !== null) {
+      const api = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${cityname}&image_type=photo&safesearch=true`;
+      console.log("bg img api", api);
+      fetch(api)
+        .then((res) => {
+          return res.json();
+        })
+        .then((obj) => {
+          console.log("obj.hits", obj.hits);
+          const i = getRandom(0, obj.hits.length);
+          console.log("i", i);
+          setBG([
+            obj.hits[i].largeImageURL,
+            obj.hits[i].imageWidth,
+            obj.hits[i].imageHeight,
+          ]);
+        });
+    }
   }, [cityname]);
 
   React.useEffect(() => {
@@ -111,43 +137,58 @@ export const CityCol = ({ col, del, scale }) => {
 
   return (
     <>
-    {bg !== {} ? 
-    <Col id={col} className="mt-5" style={{backgroundImage: `url(${bg})`}}>
-      <div>
-        {col !== 1 ? (
-          <Button className="btn-danger" onClick={() => del(col)}>
-            Delete
-          </Button>
-        ) : (
-          <Button style={{ visibility: "hidden" }}>Boo</Button>
-        )}
-      </div>
-      <Search passCoords={passCoords} current={weather} />
-      {weather !== {} ? (
-        <WeatherCard scale={scale} current={weather} forecast={forecast} />
+      {bg !== [] ? (
+        <Col
+          id={col}
+          className="mt-5"
+          style={{
+            backgroundImage: `url(${bg[0]})`,
+            // minHieght: "100vh",
+            // height: bg[2],
+            maxWidth: "1280px",
+          }}
+        >
+          <div>
+            <div>
+              {col !== 1 ? (
+                <Button className="btn-danger" onClick={() => del(col)}>
+                  Delete
+                </Button>
+              ) : (
+                <Button style={{ visibility: "hidden" }}>Boo</Button>
+              )}
+            </div>
+            <Search passCoords={passCoords} current={weather} />
+            {weather !== {} ? (
+              <WeatherCard
+                scale={scale}
+                current={weather}
+                forecast={forecast}
+              />
+            ) : (
+              <div></div>
+            )}
+          </div>
+        </Col>
       ) : (
-        <div></div>
+        <Col id={col} className="mt-5">
+          <div>
+            {col !== 1 ? (
+              <Button className="btn-danger" onClick={() => del(col)}>
+                Delete
+              </Button>
+            ) : (
+              <Button style={{ visibility: "hidden" }}>Boo</Button>
+            )}
+          </div>
+          <Search passCoords={passCoords} current={weather} />
+          {weather !== {} ? (
+            <WeatherCard scale={scale} current={weather} forecast={forecast} />
+          ) : (
+            <div></div>
+          )}
+        </Col>
       )}
-    </Col> 
-    :
-    <Col id={col} className="mt-5">
-      <div>
-        {col !== 1 ? (
-          <Button className="btn-danger" onClick={() => del(col)}>
-            Delete
-          </Button>
-        ) : (
-          <Button style={{ visibility: "hidden" }}>Boo</Button>
-        )}
-      </div>
-      <Search passCoords={passCoords} current={weather} />
-      {weather !== {} ? (
-        <WeatherCard scale={scale} current={weather} forecast={forecast} />
-      ) : (
-        <div></div>
-      )}
-    </Col>
-    }
     </>
   );
 };
