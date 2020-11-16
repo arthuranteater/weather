@@ -51,7 +51,10 @@ export const Layout = () => {
           )}
         </Col>
       </Row>
-      <Row style={{ minHeight: "100vh" }}>
+      <Row
+        className="justify-content-md-center"
+        style={{ minHeight: "100vh", justifyContent: "center" }}
+      >
         {count.map((col) => (
           <CityCol
             key={col}
