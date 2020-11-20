@@ -44,7 +44,7 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
     console.log("coords changed, fetching weather");
     console.log("coords", coords);
     if (coords.length !== 0) {
-      const api = `http://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`;
+      const api = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`;
       console.log("weather data api", api);
       fetch(api)
         .then((res) => {
@@ -184,7 +184,7 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
   React.useEffect(() => {
     console.log("coords changed, fetching forecast");
     if (coords.length !== 0) {
-      const api = `http://api.openweathermap.org/data/2.5/forecast?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`;
+      const api = `https://api.openweathermap.org/data/2.5/forecast?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`;
       console.log("api", api);
       fetch(api)
         .then((res) => {
