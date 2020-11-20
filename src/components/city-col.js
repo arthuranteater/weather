@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 
-export const CityCol = ({ col, del, scale }) => {
+export const CityCol = ({ addSearch, col, del, scale }) => {
   console.log("rendering city col", col);
 
   //col state
@@ -140,37 +140,37 @@ export const CityCol = ({ col, del, scale }) => {
             ]);
           } else {
             const api2 = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${stateQ}&image_type=photo&safesearch=true`;
-            console.log("bg img api", api2);
-            fetch(api)
+            console.log("bg img state api", api2);
+            fetch(api2)
               .then((res) => {
                 return res.json();
               })
-              .then((obj) => {
-                console.log("obj.hits", obj.hits);
-                if (obj.hits.length > 0) {
-                  const i = getRandom(0, obj.hits.length);
+              .then((stateRes) => {
+                console.log("stateRes.hits", stateRes.hits);
+                if (stateRes.hits.length > 0) {
+                  const i = getRandom(0, stateRes.hits.length);
                   console.log("i", i);
                   setBG([
-                    obj.hits[i].largeImageURL,
-                    obj.hits[i].imageWidth,
-                    obj.hits[i].imageHeight,
+                    stateRes.hits[i].largeImageURL,
+                    stateRes.hits[i].imageWidth,
+                    stateRes.hits[i].imageHeight,
                   ]);
                 } else {
                   const api3 = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${ctryQ}&image_type=photo&safesearch=true`;
-                  console.log("bg img api", api3);
-                  fetch(api)
+                  console.log("bg img ctry api", api3);
+                  fetch(api3)
                     .then((res) => {
                       return res.json();
                     })
-                    .then((obj) => {
-                      console.log("obj.hits", obj.hits);
-                      if (obj.hits.length > 0) {
-                        const i = getRandom(0, obj.hits.length);
+                    .then((ctryRes) => {
+                      console.log("ctryRes.hits", ctryRes.hits);
+                      if (ctryRes.hits.length > 0) {
+                        const i = getRandom(0, ctryRes.hits.length);
                         console.log("i", i);
                         setBG([
-                          obj.hits[i].largeImageURL,
-                          obj.hits[i].imageWidth,
-                          obj.hits[i].imageHeight,
+                          ctryRes.hits[i].largeImageURL,
+                          ctryRes.hits[i].imageWidth,
+                          ctryRes.hits[i].imageHeight,
                         ]);
                       }
                     });
@@ -218,7 +218,7 @@ export const CityCol = ({ col, del, scale }) => {
             <div>
               {col !== 1 ? (
                 <Button className="btn-danger" onClick={() => del(col)}>
-                  Delete
+                  X
                 </Button>
               ) : (
                 <Button style={{ visibility: "hidden" }}>Boo</Button>
@@ -229,6 +229,7 @@ export const CityCol = ({ col, del, scale }) => {
               passCoords={passCoords}
               current={weather}
               cityName={cityName}
+              addSearch={addSearch}
             />
             <div
               style={{
