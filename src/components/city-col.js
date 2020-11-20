@@ -7,8 +7,6 @@ import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 
 export const CityCol = ({ addSearch, col, del, scale }) => {
-  console.log("rendering city col", col);
-
   //col state
   const [coords, setCoords] = React.useState([]);
   const [weather, setWeather] = React.useState({});
@@ -28,10 +26,7 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
   }, []);
 
   React.useEffect(() => {
-    console.log("column", col);
-    console.log("coords length", coords.length);
     if (coords.length === 0 && col === 1) {
-      console.log("setting coords based off current location");
       if (window.navigator.geolocation) {
         window.navigator.geolocation.getCurrentPosition((c) =>
           setCoords([c.coords.latitude, c.coords.longitude])
@@ -41,11 +36,8 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
   });
 
   React.useEffect(() => {
-    console.log("coords changed, fetching weather");
-    console.log("coords", coords);
     if (coords.length !== 0) {
       const api = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`;
-      console.log("weather data api", api);
       fetch(api)
         .then((res) => {
           return res.json();
@@ -57,26 +49,17 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
   }, [coords, scale]);
 
   React.useEffect(() => {
-    console.log("coords changed, fetching address");
-    console.log("coords", coords);
     if (coords.length !== 0) {
       const api = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords[0]},${coords[1]}&key=${process.env.REACT_APP_GEO}`;
-      console.log("rev geocoding api", api);
       fetch(api)
         .then((res) => {
           return res.json();
         })
         .then((obj) => {
-          console.log("rev gecoding .results", obj.results);
           const arr = obj.results[0].formatted_address.split(",").slice(-3);
           if (Number.isInteger(parseInt(arr[1].charAt(1)))) {
-            // console.log("is a number", arr[1].charAt(1));
             arr.shift();
           }
-          console.log(
-            "long name",
-            obj.results[0].address_components[5].long_name
-          );
           const arr2 = obj.results[0].address_components;
           const town = arr2.filter((x) => x.types[0] === "locality")[0]
             .long_name;
@@ -86,7 +69,6 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
           const ctry = arr2.filter((x) => x.types[0] === "country")[0];
           const ctry_long = ctry.long_name;
           const ctry_short = ctry.short_name;
-          console.log("filtered", town, area, ctry);
           setCountryName(ctry_long);
           setCityName(town);
           setStateName(area);
@@ -96,9 +78,6 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
   }, [coords]);
 
   React.useEffect(() => {
-    console.log("weather fetched, fetching bg img");
-    console.log("weatherdata", weather);
-    console.log("stateName", stateName);
     if (stateName !== null) {
       const cityArr = cityName.trim().split(" ");
       const stateArr = stateName.trim().split(" ");
@@ -121,18 +100,14 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
       } else {
         ctryQ = countryName;
       }
-      console.log("q", cityQ, stateQ, ctryQ);
       const api = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${cityQ}+${stateQ}&image_type=photo&safesearch=true`;
-      console.log("bg img api", api);
       fetch(api)
         .then((res) => {
           return res.json();
         })
         .then((obj) => {
-          console.log("obj.hits", obj.hits);
           if (obj.hits.length > 0) {
             const i = getRandom(0, obj.hits.length);
-            console.log("i", i);
             setBG([
               obj.hits[i].largeImageURL,
               obj.hits[i].imageWidth,
@@ -140,16 +115,13 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
             ]);
           } else {
             const api2 = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${stateQ}&image_type=photo&safesearch=true`;
-            console.log("bg img state api", api2);
             fetch(api2)
               .then((res) => {
                 return res.json();
               })
               .then((stateRes) => {
-                console.log("stateRes.hits", stateRes.hits);
                 if (stateRes.hits.length > 0) {
                   const i = getRandom(0, stateRes.hits.length);
-                  console.log("i", i);
                   setBG([
                     stateRes.hits[i].largeImageURL,
                     stateRes.hits[i].imageWidth,
@@ -157,16 +129,13 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
                   ]);
                 } else {
                   const api3 = `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXA}&q=${ctryQ}&image_type=photo&safesearch=true`;
-                  console.log("bg img ctry api", api3);
                   fetch(api3)
                     .then((res) => {
                       return res.json();
                     })
                     .then((ctryRes) => {
-                      console.log("ctryRes.hits", ctryRes.hits);
                       if (ctryRes.hits.length > 0) {
                         const i = getRandom(0, ctryRes.hits.length);
-                        console.log("i", i);
                         setBG([
                           ctryRes.hits[i].largeImageURL,
                           ctryRes.hits[i].imageWidth,
@@ -182,10 +151,8 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
   }, [stateName]);
 
   React.useEffect(() => {
-    console.log("coords changed, fetching forecast");
     if (coords.length !== 0) {
       const api = `https://api.openweathermap.org/data/2.5/forecast?lat=${coords[0]}&lon=${coords[1]}&units=${scale}&appid=${process.env.REACT_APP_WEATHER_2}`;
-      console.log("api", api);
       fetch(api)
         .then((res) => {
           return res.json();
@@ -196,9 +163,7 @@ export const CityCol = ({ addSearch, col, del, scale }) => {
     }
   }, [coords, scale]);
 
-  React.useEffect(() => {
-    console.log("forecast", forecast);
-  }, [forecast]);
+  React.useEffect(() => {}, [forecast]);
 
   return (
     <Col
