@@ -130,7 +130,7 @@ export const WeatherCard = ({ scale, current, forecast, cityName }) => {
               color: "black",
             }}
           >
-            {console.log("day", day, "i", i)}
+            {" "}
             <Card.Body>
               <Card.Title className="mt-2">
                 {day[1].month} {day[0]}

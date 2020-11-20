@@ -16,17 +16,13 @@ export const Layout = () => {
   const [cityList, addCity] = React.useState([]);
 
   const addSearch = (city) => {
-    console.log("city received", city);
     addCity((cityList) => [...cityList, city]);
   };
 
   const helper = (del) => setCount(count.filter((col) => col !== del));
 
-  const onLoad = () => console.log("script loaded");
-
   return (
     <div style={{ backgroundColor: "black" }}>
-      {console.log("cityList", cityList)}
       <Navy
         cityList={cityList}
         setScale={setScale}
@@ -44,7 +40,7 @@ export const Layout = () => {
           }
         >
           <Col style={{ margin: "auto" }}>
-            <GlobeWrapper asyncScriptOnLoad={onLoad} />
+            <GlobeWrapper />
           </Col>
         </Row>
         <Row

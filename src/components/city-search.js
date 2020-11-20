@@ -22,16 +22,13 @@ export const Search = ({
 
   React.useEffect(() => {
     if (Object.keys(city).length > 0) {
-      console.log("adding city=", city);
       addSearch(city);
     }
   }, [city]);
 
   React.useEffect(() => {
-    console.log("change in city search");
     if (Object.keys(city).length !== 0) {
       const api = `https://maps.googleapis.com/maps/api/geocode/json?address=+${city}&key=${process.env.REACT_APP_GEO}`;
-      console.log("api", api);
       fetch(api)
         .then((res) => {
           return res.json();
@@ -39,8 +36,6 @@ export const Search = ({
         .then((json) => {
           const lat = json.results[0].geometry.location.lat;
           const lon = json.results[0].geometry.location.lng;
-          console.log("lat", lat);
-          console.log("lon", lon);
           passCoordsUp([lat, lon]);
         });
     }

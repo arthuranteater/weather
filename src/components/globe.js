@@ -1,18 +1,15 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
 
 export default class motherEarth extends React.Component {
   componentDidUpdate(prevProps) {
-    console.log("prevProps", prevProps);
-    console.log("props", this.props);
     if (this.props.WE) {
-      console.log("globe loaded, building globe");
       const { WE } = this.props;
       const earth = new WE.map(this._container);
       WE.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
       }).addTo(earth);
       earth.setView([46.8011, 8.2266], 2);
-      console.log("earth", earth);
       var before = null;
       let spin = true;
 
@@ -32,10 +29,13 @@ export default class motherEarth extends React.Component {
 
   render() {
     return (
-      <div
-        style={{ maxHeight: "400px", width: "auto", marginTop: "1rem" }}
-        ref={(r) => (this._container = r)}
-      />
+      <div>
+        {/* <Button>Play</Button> */}
+        <div
+          style={{ maxHeight: "400px", width: "auto", marginTop: "1rem" }}
+          ref={(r) => (this._container = r)}
+        />
+      </div>
     );
   }
 }
